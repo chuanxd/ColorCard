@@ -11,7 +11,6 @@
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<style>
 			body{background: url(http://newsxd.ohyayaya.com/img/kindajean.png) fixed;}
-			/*#card0_0{background-color: #DC143C;width: 100px;height: 100px;}*/
 		</style>
 		<!--[if lt IE 9]>
 	      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -28,36 +27,38 @@
 						<div id="card2_0" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card3_0" class="col-xs-6 col-sm-3 card"></div>
 					</div>
-					<div  id="row_1" class="row">
+					<div id="row_1" class="row">
 						<div id="card0_1" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card1_1" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card2_1" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card3_1" class="col-xs-6 col-sm-3 card"></div>
 					</div>
-					<div  id="row_2" class="row">
+					<div id="row_2" class="row">
 						<div id="card0_2" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card1_2" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card2_2" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card3_2" class="col-xs-6 col-sm-3 card"></div>
 					</div>
-					<div  id="row_3" class="row">
+					<div id="row_3" class="row">
 						<div id="card0_3" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card1_3" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card2_3" class="col-xs-6 col-sm-3 card"></div>
 						<div id="card3_3" class="col-xs-6 col-sm-3 card"></div>
 					</div>
+					<div class="row">
+						<button id="replayButton" type="button" class="btn btn-info">Replay</button>
+					</div>
 				</div>
 			</div>
 		</div>
-
 		<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>-->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 		<script>
 			var color = ["#DC1430","#DC1430","#DAA520","#DAA520","#2E8B57","#2E8B57","#20B2AA","#20B2AA","#4169E1","#4169E1","#BA55D3","#BA55D3","#A52A2A","#A52A2A","#808000","#808000"];
 			var count = 1;
-            var click = true;
-            var bingo = 0;
+      var click = true;
+      var bingo = 0;
 			var Selected = function(x,y,color,id){
 				this.x = x;
 				this.y = y;
@@ -70,7 +71,17 @@
 				for (var i = this.length; i > 0; i--)
 					this.push(this.splice((Math.floor(Math.random()*i)),1));
 			}
+			var replay = function(){
+				count = 0;click = true;
+				color.randomize();
+				for (var x=0;x<4;x++){
+					for (var y=0;y<4;y++){
+						$("#card"+x+"_"+y).css({"background-color":"#696969","width":"100px","height":"100px","margin":"10px"}).attr({"x":x,"y":y}).addClass("card");
+					}
+				}
+			}
 			$(document).ready(function(){
+				$("#replayButton").hide();
 				color.randomize();
 				for (var x=0;x<4;x++){
 					for (var y=0;y<4;y++){
@@ -82,37 +93,39 @@
 					var y = Number($(this).attr("y"));
 					var id = $(this).attr("id");
 					if((count%2)){
-                        if(click){
-                        $(this).css("background-color",color[x+y*4]).attr({"selected":"true"});
-						selectedA.color = color[x+y*4].toString();selectedA.id = id;
-						console.log(selectedA.id+">>"+selectedA.color);
-                        click = true;
-                        count++;
-                        }
+            if(click){
+              $(this).css("background-color",color[x+y*4]);
+							selectedA.color = color[x+y*4].toString();selectedA.id = id;
+							console.log(selectedA.id+">>"+selectedA.color);
+              click = true;
+              count++;
+            }
 					}else{
-                        //click = false;
-                        if(click){
-                           $(this).css("background-color",color[x+y*4]).attr({"selected":"true"});
-						   selectedB.color = color[x+y*4].toString();selectedB.id = id;
-						   console.log(selectedB.id+">>"+selectedB.color);
-                        }
-						   if((selectedA.color === selectedB.color) && (selectedA.id !== selectedB.id)){
-							   $("#"+selectedA.id).removeClass("card");
-							   $("#"+selectedB.id).removeClass("card");
-							   console.log(selectedA.id+":"+selectedA.color+"  "+selectedB.id+":"+selectedB.color);
-                               bingo++;
-                               count++;
-                               if(bingo == 8){alert("Bingo You Win!!!");bingo =0;}
+            if(click){
+            	$(this).css("background-color",color[x+y*4]);
+						  selectedB.color = color[x+y*4].toString();selectedB.id = id;
+						  console.log(selectedB.id+">>"+selectedB.color);
+            }
+					  if((selectedA.color === selectedB.color) && (selectedA.id !== selectedB.id)){
+						    $("#"+selectedA.id).removeClass("card");
+						    $("#"+selectedB.id).removeClass("card");
+						   	console.log(selectedA.id+":"+selectedA.color+"  "+selectedB.id+":"+selectedB.color);
+                bingo++;
+								count++;
+                if(!(bingo%8)){alert("Bingo You Win!!!");bingo =0;$("#replayButton").show();}
 						}else{
-                            click = false;
-                            count++;
+            	click = false;
+              count++;
 							setTimeout(function(){
-							$(".card").css({"background-color":"#696969","width":"100px","height":"100px","margin":"10px"}).attr({"selected":"false"})
-							console.log("clear");
-                            click = true;
+								$(".card").css({"background-color":"#696969","width":"100px","height":"100px","margin":"10px"});
+								console.log("clear");
+                click = true;
 							},800);
 						}
 					}
+				});
+				$("#replayButton").click(function(){
+					replay();
 				});
 			});
 			</script>
