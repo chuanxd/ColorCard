@@ -72,13 +72,14 @@
 					this.push(this.splice((Math.floor(Math.random()*i)),1));
 			}
 			var replay = function(){
-				count = 0;click = true;
+				count = 1;click = true;
 				color.randomize();
 				for (var x=0;x<4;x++){
 					for (var y=0;y<4;y++){
 						$("#card"+x+"_"+y).css({"background-color":"#696969","width":"100px","height":"100px","margin":"10px"}).attr({"x":x,"y":y}).addClass("card");
 					}
 				}
+				$("#replayButton").hide();
 			}
 			$(document).ready(function(){
 				$("#replayButton").hide();
